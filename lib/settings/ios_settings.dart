@@ -1,4 +1,4 @@
-import 'package:background_locator_2/keys.dart';
+import 'package:background_locator/keys.dart';
 
 import 'locator_settings.dart';
 
@@ -13,7 +13,7 @@ class IOSSettings extends LocatorSettings {
 
   final bool showsBackgroundLocationIndicator;
   final bool stopWithTerminate;
-  
+
   const IOSSettings({
     LocationAccuracy accuracy = LocationAccuracy.NAVIGATION,
     double distanceFilter = 0,

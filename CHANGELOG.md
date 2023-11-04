@@ -23,10 +23,10 @@
 
 ## 2.0.4-dev.1
 * Fixing iOS build
-* Replacing package:background_locator_2 by background_locator_2
+* Replacing package:background_locator by background_locator
 
 ## 2.0.3
-* Replacing background_locator by background_locator_2 **(BREAKING CHANGE)**
+* Replacing background_locator by background_locator **(BREAKING CHANGE)**
 * Replacing rekab by yukams
 
 ## 2.0.2

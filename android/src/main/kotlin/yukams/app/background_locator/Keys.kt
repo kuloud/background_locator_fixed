@@ -1,4 +1,4 @@
-package yukams.app.background_locator_2
+package yukams.app.background_locator
 
 class Keys {
     companion object {
@@ -157,6 +157,6 @@ class Keys {
         val BCM_DISPOSE = "BCM_DISPOSE"
 
         @JvmStatic
-        val NOTIFICATION_ACTION = "com.yukams.background_locator_2.notification"
+        val NOTIFICATION_ACTION = "com.yukams.background_locator.notification"
     }
 }

@@ -1,4 +1,4 @@
-package yukams.app.background_locator_2
+package yukams.app.background_locator
 
 import android.Manifest
 import android.content.Context
@@ -12,8 +12,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterCallbackInformation
-import yukams.app.background_locator_2.IsolateHolderService.Companion.isServiceInitialized
-import yukams.app.background_locator_2.provider.LocationRequestOptions
+import yukams.app.background_locator.IsolateHolderService.Companion.isServiceInitialized
+import yukams.app.background_locator.provider.LocationRequestOptions
 import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicBoolean
 

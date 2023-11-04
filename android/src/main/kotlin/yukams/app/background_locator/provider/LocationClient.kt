@@ -1,4 +1,4 @@
-package yukams.app.background_locator_2.provider
+package yukams.app.background_locator.provider
 
 enum class LocationClient(val value: Int) {
     Google(0), Android(1);
