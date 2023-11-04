@@ -1,10 +1,7 @@
-This package is a V2 of the background_locator package, fixing it and making it work for the newest versions of Flutter. Please read the wiki in order to make this plugin work with flutter 3.x.
+This package is a V3 of the background_locator package, fixing it and making it work for the newest versions of Flutter. Please read the wiki in order to make this plugin work with flutter 3.x.
 
-# background_locator ! [![pub package](https://img.shields.io/pub/v/background_locator.svg)](https://pub.dartlang.org/packages/background_locator) ![](https://img.shields.io/github/contributors/Yukams/background_locator_fixed) ![](https://img.shields.io/github/license/Yukams/background_locator_fixed)
-
+# background_locator
 A Flutter plugin for getting location updates even when the app is killed.
-
-![demo](https://raw.githubusercontent.com/RomanJos/background_locator/master/demo.gif)
 
 Refer to [wiki](https://github.com/Yukams/background_locator_fixed/wiki) page for install and setup instruction or jump to specific subject with below links:
 

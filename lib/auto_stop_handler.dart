@@ -17,7 +17,6 @@ class AutoStopHandler extends WidgetsBindingObserver {
         break;
       default:
         break;
-      // TODO: Handle this case.
     }
   }
 }
