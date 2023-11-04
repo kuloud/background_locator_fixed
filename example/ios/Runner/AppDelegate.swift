@@ -1,6 +1,5 @@
 import background_locator
 import Flutter
-import path_provider_ios
 import UIKit
 
 func registerPlugins(registry: FlutterPluginRegistry) {
@@ -16,18 +15,9 @@ func registerPlugins(registry: FlutterPluginRegistry) {
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
         BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
-
-        registerOtherPlugins()
-
         return super
             .application(application,
                          didFinishLaunchingWithOptions: launchOptions)
     }
 
-    func registerOtherPlugins() {
-        if !hasPlugin("io.flutter.plugins.pathprovider") {
-            FLTPathProviderPlugin
-                .register(with: registrar(forPlugin: "io.flutter.plugins.pathprovider")!)
-        }
-    }
 }

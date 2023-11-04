@@ -8,11 +8,11 @@ import 'package:background_locator/settings/android_settings.dart';
 import 'package:background_locator/settings/ios_settings.dart';
 import 'package:background_locator/settings/locator_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:location_permissions/location_permissions.dart';
 
 import 'file_manager.dart';
 import 'location_callback_handler.dart';
 import 'location_service_repository.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
 
@@ -25,8 +25,10 @@ class _MyAppState extends State<MyApp> {
   ReceivePort port = ReceivePort();
 
   String logStr = '';
-  bool isRunning;
-  LocationDto lastLocation;
+  bool isRunning = false;
+  LocationDto? lastLocation;
+  bool? _permissionGranted;
+  bool? _permissionAlwaysGranted;
 
   @override
   void initState() {
@@ -58,9 +60,9 @@ class _MyAppState extends State<MyApp> {
   Future<void> updateUI(dynamic data) async {
     final log = await FileManager.readLogFile();
 
-    LocationDto locationDto =
+    LocationDto? locationDto =
         (data != null) ? LocationDto.fromJson(data) : null;
-    await _updateNotificationText(locationDto);
+    await _updateNotificationText(locationDto!);
 
     setState(() {
       if (data != null) {
@@ -181,26 +183,41 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<bool> _checkLocationPermission() async {
-    final access = await LocationPermissions().checkPermissionStatus();
+    final locationStatusGranted = await _checkPermission(Permission.location);
+    if (mounted) {
+      setState(() {
+        _permissionGranted = locationStatusGranted;
+      });
+    }
+    if (locationStatusGranted) {
+      final locationAlwaysStatusGranted =
+          await _checkPermission(Permission.locationAlways);
+      if (mounted) {
+        setState(() {
+          _permissionAlwaysGranted = locationAlwaysStatusGranted;
+        });
+      }
+      return locationAlwaysStatusGranted;
+    }
+    return locationStatusGranted;
+  }
+
+  Future<bool> _checkPermission(Permission permission) async {
+    final access = await permission.status;
+    debugPrint('[checkPermission] access: $access');
+
     switch (access) {
-      case PermissionStatus.unknown:
       case PermissionStatus.denied:
       case PermissionStatus.restricted:
-        final permission = await LocationPermissions().requestPermissions(
-          permissionLevel: LocationPermissionLevel.locationAlways,
-        );
-        if (permission == PermissionStatus.granted) {
-          return true;
-        } else {
-          return false;
-        }
-        break;
+        final permissionStatus = await permission.request();
+        debugPrint('[checkPermission] permissionStatus: $permissionStatus');
+        return (permissionStatus == PermissionStatus.granted);
+      case PermissionStatus.permanentlyDenied:
+        return false;
       case PermissionStatus.granted:
         return true;
-        break;
       default:
         return false;
-        break;
     }
   }
 
