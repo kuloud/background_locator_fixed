@@ -86,7 +86,7 @@ class BackgroundLocatorPlugin : MethodCallHandler, FlutterPlugin, PluginRegistry
 
             val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(
+            if (context.checkSelfPermission(
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_DENIED
             ) {
@@ -158,6 +158,7 @@ class BackgroundLocatorPlugin : MethodCallHandler, FlutterPlugin, PluginRegistry
             ) {
                 intent.putExtra(Keys.SETTINGS_DISPOSABLE_PLUGGABLE, true)
             }
+
 
             ContextCompat.startForegroundService(context, intent)
         }
