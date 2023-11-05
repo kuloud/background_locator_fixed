@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:background_locator/keys.dart';
-import 'package:background_locator/location_dto.dart';
-import 'package:background_locator/settings/android_settings.dart';
-import 'package:background_locator/settings/ios_settings.dart';
+import 'package:cactus_locator/keys.dart';
+import 'package:cactus_locator/location_dto.dart';
+import 'package:cactus_locator/settings/android_settings.dart';
+import 'package:cactus_locator/settings/ios_settings.dart';
 
 class SettingsUtil {
   static Map<String, dynamic> getArgumentsMap(
