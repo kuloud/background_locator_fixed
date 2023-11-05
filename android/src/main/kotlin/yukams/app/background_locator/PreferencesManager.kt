@@ -158,7 +158,7 @@ class PreferencesManager {
             val sharedPreferences =
                     context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             val client = sharedPreferences.getInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT, 0)
-            return LocationClient.fromInt(client) ?: LocationClient.Google
+            return LocationClient.fromInt(client) ?: LocationClient.Android
         }
 
         @JvmStatic

@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import com.google.android.gms.location.LocationRequest
 import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
@@ -27,8 +26,7 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
         IsolateHolderService.backgroundEngine?.destroy();
         IsolateHolderService.backgroundEngine = null
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED
             ) {
                 // We need flutter engine to handle callback, so if it is not available we have to create a
@@ -44,7 +42,7 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
                 val callbackInfo =
                     FlutterCallbackInformation.lookupCallbackInformation(callbackHandle)
 
-                if(callbackInfo == null) {
+                if (callbackInfo == null) {
                     Log.e("IsolateHolderExtension", "Fatal: failed to find callback");
                     return;
                 }
@@ -70,7 +68,7 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
                 Keys.BACKGROUND_CHANNEL_ID
             )
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            if (
                 context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED
             ) {
@@ -79,25 +77,5 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
-    }
-}
-
-fun getLocationRequest(intent: Intent): LocationRequestOptions {
-    val interval: Long = (intent.getIntExtra(Keys.SETTINGS_INTERVAL, 10) * 1000).toLong()
-    val accuracyKey = intent.getIntExtra(Keys.SETTINGS_ACCURACY, 4)
-    val accuracy = getAccuracy(accuracyKey)
-    val distanceFilter = intent.getDoubleExtra(Keys.SETTINGS_DISTANCE_FILTER, 0.0)
-
-    return LocationRequestOptions(interval, accuracy, distanceFilter.toFloat())
-}
-
-fun getAccuracy(key: Int): Int {
-    return when (key) {
-        0 -> LocationRequest.PRIORITY_NO_POWER
-        1 -> LocationRequest.PRIORITY_LOW_POWER
-        2 -> LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        3 -> LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-        4 -> LocationRequest.PRIORITY_HIGH_ACCURACY
-        else -> LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 }

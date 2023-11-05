@@ -55,7 +55,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 ?: if (context != null) {
                     backgroundEngine = FlutterEngine(context)
                     backgroundEngine?.dartExecutor?.binaryMessenger
-                }else{
+                } else{
                     messenger
                 }
         }
@@ -102,16 +102,13 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     }
 
     private fun getNotification(): Notification {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Notification channel is available in Android O and up
-            val channel = NotificationChannel(
-                Keys.CHANNEL_ID, notificationChannelName,
-                NotificationManager.IMPORTANCE_LOW
-            )
+        val channel = NotificationChannel(
+            Keys.CHANNEL_ID, notificationChannelName,
+            NotificationManager.IMPORTANCE_LOW
+        )
 
-            (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                .createNotificationChannel(channel)
-        }
+        (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+            .createNotificationChannel(channel)
 
         val intent = Intent(this, getMainActivityClass(this))
         intent.action = Keys.NOTIFICATION_ACTION
@@ -221,7 +218,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         }
 
         locatorClient?.removeLocationUpdates()
-        stopForeground(true)
+        stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
 
         pluggables.forEach {
@@ -288,12 +285,11 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
     private fun getLocationClient(context: Context): BLLocationProvider {
         return when (PreferencesManager.getLocationClient(context)) {
-            LocationClient.Google -> GoogleLocationProviderClient(context, this)
             LocationClient.Android -> AndroidLocationProviderClient(context, this)
         }
     }
 
-    override fun onLocationUpdated(location: HashMap<Any, Any>?) {
+    override fun onLocationUpdated(location: HashMap<String, Any>?) {
         try {
             context?.let {
                 FlutterInjector.instance().flutterLoader().ensureInitializationComplete(
@@ -347,5 +343,13 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                     }
             }
         }
+    }
+
+    fun getLocationRequest(intent: Intent): LocationRequestOptions {
+        val interval: Long = (intent.getIntExtra(Keys.SETTINGS_INTERVAL, 10) * 1000).toLong()
+        val accuracyKey = intent.getIntExtra(Keys.SETTINGS_ACCURACY, 4)
+        val distanceFilter = intent.getDoubleExtra(Keys.SETTINGS_DISTANCE_FILTER, 0.0)
+
+        return LocationRequestOptions(interval, distanceFilter.toFloat())
     }
 }

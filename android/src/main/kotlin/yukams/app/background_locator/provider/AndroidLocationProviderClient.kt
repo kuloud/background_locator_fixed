@@ -84,6 +84,7 @@ class AndroidLocationProviderClient(context: Context, override var listener: Loc
     override fun onProviderEnabled(provider: String) {
         // nop
     }
+    @Deprecated("Deprecated in Java")
     override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
 
 }

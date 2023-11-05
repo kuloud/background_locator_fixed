@@ -2,7 +2,7 @@ import 'package:background_locator/keys.dart';
 import 'package:background_locator/settings/locator_settings.dart';
 import 'package:flutter/material.dart';
 
-enum LocationClient { google, android }
+enum LocationClient { android }
 
 class AndroidNotificationSettings {
   final String notificationChannelName;
@@ -58,7 +58,7 @@ class AndroidSettings extends LocatorSettings {
       double distanceFilter = 0,
       this.androidNotificationSettings = const AndroidNotificationSettings(),
       this.wakeLockTime = 60,
-      this.client = LocationClient.google})
+      this.client = LocationClient.android})
       : super(accuracy: accuracy, distanceFilter: distanceFilter);
 
   Map<String, dynamic> toMap() {
