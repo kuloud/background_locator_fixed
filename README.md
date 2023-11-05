@@ -1,23 +1,28 @@
-This package is a V3 of the background_locator package, fixing it and making it work for the newest versions of Flutter. Please read the wiki in order to make this plugin work with flutter 3.x.
+本插件是 background_locator 包的 V3 版本，适配 Flutter 3.x，在安卓侧集成了 Cactus，提高保活性能。
 
-# background_locator
-A Flutter plugin for getting location updates even when the app is killed.
+# ChangeLog
+# 1.0.0
+1. Android 集成Cactus组件，增强应用保活，移除其中OnePix功能
+2. Android minSdkVersion 改为28（个人开发视角来看，简化后续适配成本，有需求可以自行降版本）
+3. Android 移除 Google GMS 依赖
 
-Refer to [wiki](https://github.com/Yukams/background_locator_fixed/wiki) page for install and setup instruction or jump to specific subject with below links:
 
-* [Installation](https://github.com/Yukams/background_locator_fixed/wiki/Installation)
-* [Setup](https://github.com/Yukams/background_locator_fixed/wiki/Setup)
-* [How to use](https://github.com/Yukams/background_locator_fixed/wiki/How-to-use)
-* [Use other plugins in callback](https://github.com/Yukams/background_locator_fixed/wiki/Use-other-plugins-in-callback)
-* [Stop on app terminate](https://github.com/Yukams/background_locator_fixed/wiki/Stop-on-app-terminate)
-* [LocationSettings options](https://github.com/Yukams/background_locator_fixed/wiki/LocationSettings-options)
-* [Restart service on device reboot (Android only)](https://github.com/Yukams/background_locator_fixed/wiki/Restart-service-on-device-reboot)
+# cactus_locator
+一个Flutter插件，即使在应用程序被杀死时也可以获得位置更新。
+
+请参阅[wiki](https://github.com/kuloud/background_locator_fixed/wiki)页面获取安装和设置说明，或通过以下链接跳转到特定主题:
+
+* [安装](https://github.com/kuloud/background_locator_fixed/wiki/Installation)
+* [配置](https://github.com/kuloud/background_locator_fixed/wiki/Setup)
+* [如何使用](https://github.com/kuloud/background_locator_fixed/wiki/How-to-use)
 
 ##  License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+本项目基于 MIT 开源许可 - [LICENSE](LICENSE)
 
 ## Contributor
-Thanks to all who contributed on this plugin to fix bugs and adding new feature, including:
+本项目基于 Yukams 的 V2 版本定制，原贡献者&项目:
+* [Cactus](https://github.com/gyf-dev/Cactus)
+* [Yukams](https://github.com/Yukams) (creator of V2)
 * [Rekab](https://github.com/rekabhq) (creator of V1)
 * [Gerardo Ibarra](https://github.com/gpibarra)
 * [RomanJos](https://github.com/RomanJos)
