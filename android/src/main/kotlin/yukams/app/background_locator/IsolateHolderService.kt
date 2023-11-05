@@ -1,16 +1,22 @@
 package yukams.app.background_locator
 
-import android.app.*
 import android.Manifest
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Build
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.os.IBinder
-import android.os.PowerManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import android.content.pm.PackageManager
+import com.gyf.cactus.ext.cactus
+import com.gyf.cactus.ext.cactusRestart
+import com.gyf.cactus.ext.cactusUnregister
 import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BinaryMessenger
@@ -19,9 +25,11 @@ import io.flutter.plugin.common.MethodChannel
 import yukams.app.background_locator.pluggables.DisposePluggable
 import yukams.app.background_locator.pluggables.InitPluggable
 import yukams.app.background_locator.pluggables.Pluggable
-import yukams.app.background_locator.provider.*
-import java.util.HashMap
-import androidx.core.app.ActivityCompat
+import yukams.app.background_locator.provider.AndroidLocationProviderClient
+import yukams.app.background_locator.provider.BLLocationProvider
+import yukams.app.background_locator.provider.LocationClient
+import yukams.app.background_locator.provider.LocationRequestOptions
+import yukams.app.background_locator.provider.LocationUpdateListener
 
 class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, Service() {
     companion object {
@@ -35,13 +43,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         val ACTION_UPDATE_NOTIFICATION = "UPDATE_NOTIFICATION"
 
         @JvmStatic
-        private val WAKELOCK_TAG = "IsolateHolderService::WAKE_LOCK"
-
-        @JvmStatic
         var backgroundEngine: FlutterEngine? = null
-
-        @JvmStatic
-        private val notificationId = 1
 
         @JvmStatic
         var isServiceRunning = false
@@ -55,7 +57,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 ?: if (context != null) {
                     backgroundEngine = FlutterEngine(context)
                     backgroundEngine?.dartExecutor?.binaryMessenger
-                } else{
+                } else {
                     messenger
                 }
         }
@@ -80,22 +82,17 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
     override fun onCreate() {
         super.onCreate()
+
+        cactus {
+            isDebug(true)
+            setNotification(getNotification())
+        }
+
         startLocatorService(this)
-        startForeground(notificationId, getNotification())
     }
 
     private fun start() {
-        (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG).apply {
-                setReferenceCounted(false)
-                acquire(wakeLockTime)
-            }
-        }
-
-        // Starting Service as foreground with a notification prevent service from closing
-        val notification = getNotification()
-        startForeground(notificationId, notification)
-
+        cactusRestart()
         pluggables.forEach {
             context?.let { it1 -> it.onServiceStart(it1) }
         }
@@ -136,13 +133,19 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.e("IsolateHolderService", "onStartCommand => intent.action : ${intent?.action}")
-        if(intent == null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (intent == null) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 Log.e("IsolateHolderService", "app has crashed, stopping it")
                 stopSelf()
-            }
-            else {
+            } else {
                 return super.onStartCommand(intent, flags, startId)
             }
         }
@@ -152,6 +155,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 isServiceRunning = false
                 shutdownHolderService()
             }
+
             ACTION_START == intent?.action -> {
                 if (isServiceRunning) {
                     isServiceRunning = false
@@ -163,6 +167,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                     startHolderService(intent)
                 }
             }
+
             ACTION_UPDATE_NOTIFICATION == intent?.action -> {
                 if (isServiceRunning) {
                     updateNotification(intent)
@@ -209,18 +214,11 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
     private fun shutdownHolderService() {
         Log.e("IsolateHolderService", "shutdownHolderService")
-        (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG).apply {
-                if (isHeld) {
-                    release()
-                }
-            }
-        }
-
         locatorClient?.removeLocationUpdates()
         stopForeground(STOP_FOREGROUND_REMOVE)
         stopSelf()
 
+        cactusUnregister()
         pluggables.forEach {
             context?.let { it1 -> it.onServiceDispose(it1) }
         }
@@ -244,9 +242,9 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         }
 
         val notification = getNotification()
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(notificationId, notification)
+        cactus {
+            setNotification(notification)
+        }
     }
 
     private fun getMainActivityClass(context: Context): Class<*>? {
@@ -268,6 +266,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
                 Keys.METHOD_SERVICE_INITIALIZED -> {
                     isServiceRunning = true
                 }
+
                 else -> result.notImplemented()
             }
 
@@ -347,7 +346,6 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
 
     fun getLocationRequest(intent: Intent): LocationRequestOptions {
         val interval: Long = (intent.getIntExtra(Keys.SETTINGS_INTERVAL, 10) * 1000).toLong()
-        val accuracyKey = intent.getIntExtra(Keys.SETTINGS_ACCURACY, 4)
         val distanceFilter = intent.getDoubleExtra(Keys.SETTINGS_DISTANCE_FILTER, 0.0)
 
         return LocationRequestOptions(interval, distanceFilter.toFloat())

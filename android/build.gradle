@@ -6,7 +6,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-    }
+            }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
@@ -18,7 +18,7 @@ rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
-    }
+            }
 }
 
 apply plugin: 'com.android.library'
@@ -50,7 +50,6 @@ android {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // implementation "com.google.android.gms:play-services-location:21.0.1"
+    implementation 'io.github.kuloud:cactus:0.0.1'
     implementation 'com.google.code.gson:gson:2.8.9'
-//    implementation 'com.google.android.material:material:1.0.0'
 }

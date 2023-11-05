@@ -240,7 +240,7 @@ class BackgroundLocatorPlugin : MethodCallHandler, FlutterPlugin, PluginRegistry
             initializeService(context, args)
 
             val settings = args[Keys.ARG_SETTINGS] as Map<*, *>
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context.checkSelfPermission(
+            if (context.checkSelfPermission(
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) == PackageManager.PERMISSION_GRANTED
             ) {
