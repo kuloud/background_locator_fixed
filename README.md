@@ -8,11 +8,11 @@
 flutter pub add cactus_locator
 ```
 
-请参阅[wiki](https://github.com/kuloud/background_locator_fixed/wiki)页面获取安装和设置说明，或通过以下链接跳转到特定主题:
+请参阅[wiki](https://github.com/kuloud/cactus_locator/wiki)页面获取安装和设置说明，或通过以下链接跳转到特定主题:
 
-* [安装](https://github.com/kuloud/background_locator_fixed/wiki/Installation)
-* [配置](https://github.com/kuloud/background_locator_fixed/wiki/Setup)
-* [如何使用](https://github.com/kuloud/background_locator_fixed/wiki/How-to-use)
+* [安装](https://github.com/kuloud/cactus_locator/wiki/Installation)
+* [配置](https://github.com/kuloud/cactus_locator/wiki/Setup)
+* [如何使用](https://github.com/kuloud/cactus_locator/wiki/How-to-use)
 
 # ChangeLog
 # 1.0.0

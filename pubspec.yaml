@@ -1,8 +1,8 @@
 name: cactus_locator
-description: A Flutter plugin to request the location even if the app is killed. Sending the location to a dart function in background, also provide a meter filter
-version: 1.0.0
-homepage: https://github.com/kuloud/background_locator_fixed
-issue_tracker: https://github.com/kuloud/background_locator_fixed/issues
+description: 一个Flutter插件，让应用程序在后台，也可以获得位置更新。在安卓侧集成了 Cactus，提高保活性能。
+version: 1.0.1
+homepage: https://github.com/kuloud/cactus_locator
+issue_tracker: https://github.com/kuloud/cactus_locator/issues
 platforms:
   android:
   ios:
