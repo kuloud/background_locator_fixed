@@ -39,11 +39,9 @@ class AndroidNotificationSettings {
 
 class AndroidSettings extends LocatorSettings {
   final AndroidNotificationSettings androidNotificationSettings;
-  final int wakeLockTime;
   final int interval;
   final LocationClient client;
 
-  /// [accuracy] The accuracy of location, Default is max accuracy NAVIGATION.
   ///
   /// [interval] Interval of retrieving location update in second. Only applies for android. Default is 5 second.
   ///
@@ -51,22 +49,20 @@ class AndroidSettings extends LocatorSettings {
   ///
   /// [androidNotificationSettings] Specific setting for android notification.
   ///
-  /// [wakeLockTime] Time for living service in background in minutes. Only applies in android. Default is 60 minute.
   const AndroidSettings(
-      {LocationAccuracy accuracy = LocationAccuracy.NAVIGATION,
-      this.interval = 5,
+      {this.interval = 5,
       double distanceFilter = 0,
       this.androidNotificationSettings = const AndroidNotificationSettings(),
-      this.wakeLockTime = 60,
       this.client = LocationClient.android})
-      : super(accuracy: accuracy, distanceFilter: distanceFilter);
+      : super(
+            accuracy: LocationAccuracy.NAVIGATION, // android 定位没有精度设置
+            distanceFilter: distanceFilter);
 
   Map<String, dynamic> toMap() {
     return {
       Keys.SETTINGS_ACCURACY: accuracy.value,
       Keys.SETTINGS_INTERVAL: interval,
       Keys.SETTINGS_DISTANCE_FILTER: distanceFilter,
-      Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME: wakeLockTime,
       Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME:
           androidNotificationSettings.notificationChannelName,
       Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE:
@@ -78,8 +74,7 @@ class AndroidSettings extends LocatorSettings {
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON:
           androidNotificationSettings.notificationIcon,
       Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR:
-          androidNotificationSettings.notificationIconColor.value,
-      Keys.SETTINGS_ANDROID_LOCATION_CLIENT: client.index
+          androidNotificationSettings.notificationIconColor.value
     };
   }
 }

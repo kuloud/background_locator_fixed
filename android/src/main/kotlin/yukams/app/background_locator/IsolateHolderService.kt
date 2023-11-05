@@ -75,7 +75,6 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         "Background location is on to keep the app up-tp-date with your location. This is required for main features to work properly when the app is not running."
     private var notificationIconColor = 0
     private var icon = 0
-    private var wakeLockTime = 60 * 60 * 1000L // 1 hour default wake lock time
     private var locatorClient: BLLocationProvider? = null
     internal lateinit var backgroundChannel: MethodChannel
     internal var context: Context? = null
@@ -188,7 +187,6 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         icon = resources.getIdentifier(iconName, "mipmap", packageName)
         notificationIconColor =
             intent.getLongExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR, 0).toInt()
-        wakeLockTime = intent.getIntExtra(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME, 60) * 60 * 1000L
 
         locatorClient = context?.let { getLocationClient(it) }
         locatorClient?.requestLocationUpdates(getLocationRequest(intent))

@@ -85,17 +85,6 @@ class PreferencesManager {
                             (settings[Keys.SETTINGS_DISTANCE_FILTER] as Double).toFloat())
                     .apply()
 
-            if (settings.containsKey(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME)) {
-                sharedPreferences.edit()
-                        .putInt(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME,
-                                settings[Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME] as Int)
-                        .apply()
-            }
-
-            sharedPreferences.edit()
-                    .putInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT,
-                            settings[Keys.SETTINGS_ANDROID_LOCATION_CLIENT] as Int)
-                    .apply()
         }
 
         @JvmStatic
@@ -142,23 +131,13 @@ class PreferencesManager {
             settings[Keys.SETTINGS_DISTANCE_FILTER] =
                     sharedPreferences.getFloat(Keys.SETTINGS_DISTANCE_FILTER, 0f).toDouble()
 
-            if (sharedPreferences.contains(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME)) {
-                settings[Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME] = sharedPreferences.getInt(Keys.SETTINGS_ANDROID_WAKE_LOCK_TIME, 0)
-            }
-
-            settings[Keys.SETTINGS_ANDROID_LOCATION_CLIENT] =
-                    sharedPreferences.getInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT, 0)
-
             result[Keys.ARG_SETTINGS] = settings
             return result
         }
 
         @JvmStatic
         fun getLocationClient(context: Context): LocationClient {
-            val sharedPreferences =
-                    context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
-            val client = sharedPreferences.getInt(Keys.SETTINGS_ANDROID_LOCATION_CLIENT, 0)
-            return LocationClient.fromInt(client) ?: LocationClient.Android
+            return LocationClient.Android
         }
 
         @JvmStatic
