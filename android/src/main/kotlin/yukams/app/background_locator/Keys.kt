@@ -133,12 +133,6 @@ class Keys {
         val SETTINGS_ANDROID_NOTIFICATION_ICON_COLOR = "settings_android_notificationIconColor"
 
         @JvmStatic
-        val SETTINGS_ANDROID_WAKE_LOCK_TIME = "settings_android_wakeLockTime"
-
-        @JvmStatic
-        val SETTINGS_ANDROID_LOCATION_CLIENT = "settings_android_location_client"
-
-        @JvmStatic
         val SETTINGS_INIT_PLUGGABLE = "settings_init_pluggable"
 
         @JvmStatic
